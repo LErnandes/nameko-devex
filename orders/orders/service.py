@@ -5,6 +5,10 @@ from nameko_sqlalchemy import DatabaseSession
 from orders.exceptions import NotFound
 from orders.models import DeclarativeBase, Order, OrderDetail
 from orders.schemas import OrderSchema
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 
 class OrdersService:
@@ -14,7 +18,15 @@ class OrdersService:
     event_dispatcher = EventDispatcher()
 
     @rpc
+    def list_orders(self):
+        logger.debug('Get all orders')
+        orders = self.db.query(Order).get()
+
+        return OrderSchema(many=True).dump(orders).data
+
+    @rpc
     def get_order(self, order_id):
+        logger.debug(f'Get order by id - {order_id}')
         order = self.db.query(Order).get(order_id)
 
         if not order:
@@ -22,8 +34,10 @@ class OrdersService:
 
         return OrderSchema().dump(order).data
 
+
     @rpc
     def create_order(self, order_details):
+        logger.debug(f'Create order - {order_details}')
         order = Order(
             order_details=[
                 OrderDetail(
@@ -45,8 +59,10 @@ class OrdersService:
 
         return order
 
+
     @rpc
     def update_order(self, order):
+        logger.debug(f'Update order - {order}')
         order_details = {
             order_details['id']: order_details
             for order_details in order['order_details']
@@ -61,8 +77,10 @@ class OrdersService:
         self.db.commit()
         return OrderSchema().dump(order).data
 
+
     @rpc
     def delete_order(self, order_id):
+        logger.debug(f'Delete order by id - {order_id}')
         order = self.db.query(Order).get(order_id)
         self.db.delete(order)
         self.db.commit()

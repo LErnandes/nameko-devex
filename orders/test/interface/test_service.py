@@ -34,6 +34,11 @@ def test_get_order(orders_rpc, order):
     assert response['id'] == order.id
 
 
+def test_get_orders(orders_rpc):
+    response = orders_rpc.list_orders()
+    assert type(response[0]) == OrderDetail
+
+
 @pytest.mark.usefixtures('db_session')
 def test_will_raise_when_order_not_found(orders_rpc):
     with pytest.raises(RemoteError) as err:

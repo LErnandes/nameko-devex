@@ -53,7 +53,7 @@ class StorageWrapper:
             self._format_key(product['id']),
             product)
 
-    def get(self, product_id):
+    def delete(self, product_id):
         product = self.client.hgetall(self._format_key(product_id))
         if not product:
             raise NotFound('Product ID {} does not exist'.format(product_id))

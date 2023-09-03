@@ -38,10 +38,6 @@ echo
 echo "=== Getting product id: the_odyssey ==="
 curl -s "${STD_APP_URL}/products/the_odyssey" | jq .
 
-# Test: Delete Product
-echo "=== Deleting a product id: the_odyssey ==="
-curl -s -XDELETE "${STD_APP_URL}/products/the_odyssey" | jq .
-
 # Test: Create Order
 echo "=== Creating Order ==="
 ORDER_ID=$(
@@ -60,3 +56,7 @@ curl -s "${STD_APP_URL}/orders/${ID}" | jq .
 # Test: Get Orders
 echo "=== Getting Orders ==="
 curl -s "${STD_APP_URL}/orders/" | jq .
+
+# Test: Delete Product
+echo "=== Deleting a product id: the_odyssey ==="
+curl -s -XDELETE "${STD_APP_URL}/products/the_odyssey" | jq .
